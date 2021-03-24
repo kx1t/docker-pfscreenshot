@@ -50,57 +50,73 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install deps + add Chrome Stable + purge all the things
-RUN set -x &&
-  apt-get update && apt-get install -y \
-	apt-transport-https \
-	ca-certificates \
-	curl \
-	gnupg \
-  nginx \
-  nano \
-  procps \
-	--no-install-recommends \
-	&& curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-	&& echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-	&& apt-get update && apt-get install -y \
-	google-chrome-stable \
-	fontconfig \
-	fonts-ipafont-gothic \
-	fonts-wqy-zenhei \
-	fonts-thai-tlwg \
-	fonts-kacst \
-	fonts-symbola \
-	fonts-noto \
-	fonts-freefont-ttf \
-	--no-install-recommends \
-	&& apt-get purge --auto-remove -y curl gnupg \
-	&& rm -rf /var/lib/apt/lists/*
+# Copy needs to be here to prevent github actions from failing.
+# SSL Certs are pre-loaded into the rootfs via a job in github action:
+# See: "Copy CA Certificates from GitHub Runner to Image rootfs" in deploy.yml
+COPY rootfs/ /
+
+RUN set -x && \
+# first get the repo names, etc.
+    apt-get update && apt-get install -y --no-install-recommends curl gnupg && \
+    curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+# install S6 Overlay
+    curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
+# remove the unneeded packages again
+    apt-get purge --auto-remove -y curl gnupg && \
+#
+# define packages needed for installation and general management of the container:
+    TEMP_PACKAGES=() && \
+    KEPT_PACKAGES=() && \
+    KEPT_PIP_PACKAGES=() && \
+    KEPT_RUBY_PACKAGES=() && \
+# add permanent packages to install (general):
+    KEPT_PACKAGES+=(apt-transport-https) && \
+    KEPT_PACKAGES+=(ca-certificates) && \
+    KEPT_PACKAGES+=(nginx) && \
+    KEPT_PACKAGES+=(nano) && \
+    KEPT_PACKAGES+=(procps) && \
+# add permanent packages to install (chrome specific):
+    KEPT_PACKAGES+=(google-chrome-stable) && \
+    KEPT_PACKAGES+=(fontconfig) && \
+    KEPT_PACKAGES+=(fonts-ipafont-gothic) && \
+    KEPT_PACKAGES+=(fonts-wqy-zenhei) && \
+    KEPT_PACKAGES+=(fonts-thai-tlwg) && \
+    KEPT_PACKAGES+=(fonts-kacst) && \
+    KEPT_PACKAGES+=(fonts-symbola) && \
+    KEPT_PACKAGES+=(fonts-noto) && \
+    KEPT_PACKAGES+=(fonts-freefont-ttf) && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+    KEPT_PACKAGES+=() && \
+# add temporary packages to install:
+    TEMP_PACKAGES+=() && \
+    TEMP_PACKAGES+=() && \
+#
+# Now install these packages:
+    apt-get install -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -o Dpkg::Options::="--force-confold" --force-yes -y --no-install-recommends  --no-install-suggests\
+        ${KEPT_PACKAGES[@]} \
+        ${TEMP_PACKAGES[@]}
 
 # Add Chrome as a user
 RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
 	&& mkdir -p /home/chrome && chown -R chrome:chrome /home/chrome
 
-RUN set -x && \
-#
-# Do some other stuff
-    echo "alias dir=\"ls -alsv\"" >> /root/.bashrc && \
-    echo "alias nano=\"nano -l\"" >> /root/.bashrc && \
-#
-# install S6 Overlay
-    curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
-#
-
 # Run Chrome non-privileged
 USER chrome
 
 # Expose port 9222
-# EXPOSE 9222
+EXPOSE 9222
 
 # Autorun chrome headless with no GPU
 #ENTRYPOINT [ "google-chrome" ]
 #CMD [ "--headless", "--disable-gpu", "--remote-debugging-address=0.0.0.0", "--remote-debugging-port=9222" ]
 
 ENTRYPOINT [ "/init" ]
-
-EXPOSE 80
