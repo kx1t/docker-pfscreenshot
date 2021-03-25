@@ -60,6 +60,7 @@ RUN set -x && \
 # Now install whatever we need to get installed:
 RUN set -x && \
     echo "current directory is $(pwd)" && \
+    ls -als nginx/ && \
     cp -f nginx/default /etc/nginx/sites-available/default  && \
     mkdir -p /var/www/php  && \
 
