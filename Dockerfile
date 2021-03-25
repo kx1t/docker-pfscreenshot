@@ -48,6 +48,9 @@ RUN set -x && \
 # Do some other stuff
     echo "alias dir=\"ls -alsv\"" >> /root/.bashrc && \
 #
+# create some directories:
+    mkdir -p /var/www/php/ /run/php/ && \
+#
 # install S6 Overlay
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
 #
@@ -58,9 +61,6 @@ RUN set -x && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/*
 
 # Now install whatever we need to get installed:
-RUN set -x && \
-    #cp -f nginx/default /etc/nginx/sites-available/default  && \
-    mkdir -p /var/www/php/ /run/php/
 
 COPY nginx/default /etc/nginx/sites-available/
 
