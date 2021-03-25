@@ -1,0 +1,4 @@
+timeout --preserve-status -s SIGKILL -v 10 chromium --no-sandbox --headless --disable-gpu --virtual-time-budget=5000 --force-tablet-mode --force-device-scale-factor=1 --window-size=1200,800 --screenshot "https://planeboston.com/tar1090/?icao=ae068c&hideSidebar&hideButtons&zoom=10" 2>/dev/null >/dev/null ; echo $?
+/usr/sbin/nginx -g 'daemon on; master_process on;'
+
+sudo /usr/sbin/php-fpm7.3 --nodaemonize --fpm-config /etc/php/7.3/fpm/php-fpm.conf

@@ -34,7 +34,9 @@ RUN set -x && \
 #
 # define packages needed for docker-pfscreenshot
     KEPT_PACKAGES+=(chromium) && \
+    KEPT_PACKAGES+=(fonts-freefont-ttf) && \
     KEPT_PACKAGES+=(nginx) && \
+    KEPT_PACKAGES+=(php-fpm) && \
 #
 # Install all these packages:
     apt-get update && \
@@ -54,7 +56,11 @@ RUN set -x && \
     apt-get autoremove -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -y && \
     apt-get clean -y && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/*
-    # following lines commented out for development purposes
+
+# Now install whatever we need to get installed:
+RUN set -x && \
+    cp -f nginx/default /etc/nginx/sites-available/default
+    mkdir -p /var/www/php
 
 ENTRYPOINT [ "/init" ]
 
