@@ -12,5 +12,5 @@ pushd ~/docker-pfscreenshot
 git checkout $BRANCH || exit 2
 
 git pull -a
-docker buildx build --compress --push $2 --platform linux/armhf,linux/arm64 --tag kx1t/planefence:$TAG .
+docker buildx build --compress --push $2 --platform linux/armhf,linux/arm64 --tag kx1t/pfscreenshot:$TAG .
 popd
