@@ -43,26 +43,6 @@ RUN set -x && \
         ${TEMP_PACKAGES[@]} \
         && \
     git config --global advice.detachedHead false && \
-#
-# Install noisecapt (it was copied in at the top of the script, so this is
-# mainly moving files to the correct location):
-    mkdir -p /usr/share/noisecapt && \
-    mkdir -p /etc/services.d/noisecapt && \
-    pushd /noisecapt && \
-       cp scripts/* /usr/share/noisecapt && \
-       cp services.d/start_noisecapt /etc/services.d/noisecapt/run && \
-       chmod a+x /usr/share/noisecapt/*.sh /etc/services.d/noisecapt/run && \
-    popd && \
-#
-# Configure lighttpd to start and work with noisecapt:
-    # move the s6 service in place:
-       mkdir -p /etc/services.d/lighttpd && \
-       cp /noisecapt/services.d/start_lighttpd /etc/services.d/lighttpd/run && \
-       chmod a+x /etc/services.d/lighttpd/run && \
-    # Place and enable the lighty mod:
-       cp /noisecapt/88-noisecapt.conf /etc/lighttpd/conf-available && \
-       ln -sf /etc/lighttpd/conf-available/88-noisecapt.conf /etc/lighttpd/conf-enabled && \
-#
 # Do some other stuff
     echo "alias dir=\"ls -alsv\"" >> /root/.bashrc && \
 #
@@ -73,9 +53,8 @@ RUN set -x && \
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -y && \
     apt-get clean -y && \
-    rm -rf /src/* /tmp/* /var/lib/apt/lists/* /etc/services.d/noisecapt/.blank /etc/services.d/socket30003/.blank /run/socket30003/install-*
+    rm -rf /src/* /tmp/* /var/lib/apt/lists/*
     # following lines commented out for development purposes
-    # rm -rf /git/* /noisecapt/*
 
 ENTRYPOINT [ "/init" ]
 
