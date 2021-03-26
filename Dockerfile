@@ -32,7 +32,7 @@ RUN set -x && \
     KEPT_PACKAGES+=(procps nano aptitude netcat) && \
 #
 # define packages needed for docker-pfscreenshot
-    KEPT_PACKAGES+=(firefox) && \
+    KEPT_PACKAGES+=(firefox-esr) && \
     KEPT_PACKAGES+=(nginx) && \
     KEPT_PACKAGES+=(php-fpm) && \
 #
