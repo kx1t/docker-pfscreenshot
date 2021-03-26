@@ -20,7 +20,7 @@ RUN set -x && \
     TEMP_PACKAGES+=(pkg-config) && \
     TEMP_PACKAGES+=(autoconf) && \
     TEMP_PACKAGES+=(wget) && \
-    TEMP_PACKAGES+=(software-properties-common) && \
+    # we need to install this before anything else, so it's moved directly into the install command: TEMP_PACKAGES+=(software-properties-common) && \
 # required for S6 overlay
 # curl kept for healthcheck
 # ca-certificates kept for python
@@ -38,6 +38,7 @@ RUN set -x && \
 #
 # Install all these packages:
     apt-get update && \
+    apt-get install -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -o Dpkg::Options::="--force-confold" --force-yes -y --no-install-recommends  --no-install-suggests software-properties-common && \
     add-apt-repository -y ppa:mozillateam/firefox-next && \
     apt-get install -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -o Dpkg::Options::="--force-confold" --force-yes -y --no-install-recommends  --no-install-suggests\
         ${KEPT_PACKAGES[@]} \
