@@ -44,7 +44,6 @@ RUN set -x && \
         ${KEPT_PACKAGES[@]} \
         ${TEMP_PACKAGES[@]} \
         && \
-    git config --global advice.detachedHead false && \
 # Do some other stuff
     echo "alias dir=\"ls -alsv\"" >> /root/.bashrc && \
 #
