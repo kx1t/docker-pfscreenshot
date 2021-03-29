@@ -61,9 +61,7 @@ RUN set -x && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/*
 
 # Now install whatever we need to get installed:
-
 COPY nginx/default /etc/nginx/sites-available/
-
+RUN pip3 install -r /opt/app/requirements.txt
 ENTRYPOINT [ "/init" ]
-
 EXPOSE 80

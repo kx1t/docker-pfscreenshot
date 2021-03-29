@@ -13,8 +13,15 @@ echo "[$APPNAME][$(date)] php7.3-fpm started as an s6 service"
 #
 # -----------------------------------------------------------------------------------
 #
+# If the run directory doesn't exist, create it. This directory will contain the PHP socket.
+# (It's supposed to be created by the Dockerfile, but docker-compose definitions
+#  of /run as tmpfs overwrites any build-time installs in that directory tree.)
+#
+mkdir -p /run/php
+#
 # We are running php7.3-fpm in the foreground. If, for any reason, it fails, we wait 10 seconds
 # to make sure we're not spamming the processor with restarts, and then we run it again.
+#
 while true
 do
     /usr/sbin/php-fpm7.3 --nodaemonize --fpm-config /etc/php/7.3/fpm/php-fpm.conf
