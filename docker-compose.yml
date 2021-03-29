@@ -1,0 +1,18 @@
+version: '3.8'
+  
+services:
+
+  planefence:
+    image: kx1t/pfscreenshot
+    tty: true
+    container_name: pfscreenshot
+    hostname: pfscreenshot
+    restart: always
+    ports:
+      - 8088:80
+    environment:
+      - TZ=America/New_York
+      -
+    tmpfs:
+      - /run:rw,nosuid,nodev,exec,relatime,size=128M
+      - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
