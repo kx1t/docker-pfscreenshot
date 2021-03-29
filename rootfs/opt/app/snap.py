@@ -8,7 +8,7 @@ import os
 
 # total arguments
 # We need 2 arguments - the website URL (argv[1]) and the ICAO (argv[2])
-if len(sys.argv) != 2:
+if len(sys.argv) != 3:
     sys.exit('Expected use: snap.py <tar1090 base url> <icao>')
 
 urlraw = sys.argv[1]
