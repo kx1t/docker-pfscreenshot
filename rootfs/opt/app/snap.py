@@ -17,7 +17,7 @@ icao = sys.argv[2]
 def get_screenshot(urlraw, icao, fname='screenshot.png'):
     #url = f"https://globe.adsbexchange.com/?icao={icao}"
     #url = f'https://globe.adsbexchange.com/?icao={icao}&zoom=11&hideSidebar&hideButtons'
-    url = f'{urlraw}?icao={icao}&zoom=11&hideSidebar&hideButtons'
+    url = f'{urlraw}?icao={icao}&zoom=11&hideSidebar&hideButtons&mapDim=0'
 
     zoom = 75
 
