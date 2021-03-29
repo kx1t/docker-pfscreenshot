@@ -3,33 +3,43 @@
 from selenium import webdriver
 import selenium
 import time
+import sys
+import os
 
-def get_screenshot(icao='', fname='screenshot.png'):
-  #url = f"https://globe.adsbexchange.com/?icao={icao}"
-  #url = f'https://globe.adsbexchange.com/?icao={icao}&zoom=11&hideSidebar&hideButtons'
-  url = f'https://ramonk.net/tar1090/?icao={icao}&zoom=11&hideSidebar&hideButtons'
+# total arguments
+# We need 2 arguments - the website URL (argv[1]) and the ICAO (argv[2])
+if len(sys.argv) != 2:
+    sys.exit('Expected use: snap.py <tar1090 base url> <icao>')
 
-  co = selenium.webdriver.chrome.options.Options()
-  co.add_argument("--headless")
-  co.add_argument("--no-sandbox")
-  co.add_argument("--incognito")
-  browser = selenium.webdriver.Chrome(options=co)
+urlraw = sys.argv[1]
+icao = sys.argv[2]
 
-  browser.get(url)
-  #elems = browser.find_elements_by_css_selector("#map_canvas canvas")
-  #if not len(elems):
-  #  raise Exception("no elements found (eg missing map canvas)")
-  #elif not elems[0].is_displayed():
-  #  raise Exception(f"have {len(elems)}, but the first isn't displayed")
+def get_screenshot(urlraw, icao, fname='screenshot.png'):
+    #url = f"https://globe.adsbexchange.com/?icao={icao}"
+    #url = f'https://globe.adsbexchange.com/?icao={icao}&zoom=11&hideSidebar&hideButtons'
+    url = f'{urlraw}?icao={icao}&zoom=11&hideSidebar&hideButtons'
 
-  time.sleep(3)
-  br = browser.save_screenshot(fname)
-  print(f"done {br}")
+    co = selenium.webdriver.chrome.options.Options()
+    co.add_argument("--headless")
+    co.add_argument("--no-sandbox")
+    co.add_argument("--incognito")
+    browser = selenium.webdriver.Chrome(options=co)
 
-  browser.quit()
+    browser.get(url)
+    #elems = browser.find_elements_by_css_selector("#map_canvas canvas")
+    #if not len(elems):
+    #  raise Exception("no elements found (eg missing map canvas)")
+    #elif not elems[0].is_displayed():
+    #  raise Exception(f"have {len(elems)}, but the first isn't displayed")
 
-  return fname
+    time.sleep(3)
+    br = browser.save_screenshot(fname)
+    # print(f"done {br}")
 
-f = get_screenshot(fname='/tmp/snap.png')
-print(f)
+    browser.quit()
 
+    return fname
+
+f = get_screenshot(urlraw, icao, fname='/tmp/snap.png')
+os.system('chmod a+r /tmp/snap.png')
+# print(f)
