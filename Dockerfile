@@ -32,6 +32,7 @@ RUN set -x && \
     KEPT_PACKAGES+=(procps nano) && \
 #
 # define packages needed for docker-pfscreenshot
+    KEPT_PACKAGES+=(nginx) && \
     KEPT_PACKAGES+=(python3-selenium) && \
     KEPT_PACKAGES+=(chromium) && \
     KEPT_PACKAGES+=(chromium-driver) && \
@@ -47,7 +48,7 @@ RUN set -x && \
 # Do some other stuff
     echo "alias dir=\"ls -alsv\"" >> /root/.bashrc && \
 #
-# create some directories:
+# create the directory where the PHP socket will be located:
     mkdir -p /run/php/ && \
 #
 # install S6 Overlay
