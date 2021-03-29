@@ -19,10 +19,14 @@ def get_screenshot(urlraw, icao, fname='screenshot.png'):
     #url = f'https://globe.adsbexchange.com/?icao={icao}&zoom=11&hideSidebar&hideButtons'
     url = f'{urlraw}?icao={icao}&zoom=11&hideSidebar&hideButtons'
 
+    zoom = 75
+
     co = selenium.webdriver.chrome.options.Options()
+    co.add_argument("--delay 5")
     co.add_argument("--headless")
     co.add_argument("--no-sandbox")
     co.add_argument("--incognito")
+    co.add_argument(f'window-size=1200x1600')
     browser = selenium.webdriver.Chrome(options=co)
 
     browser.get(url)
@@ -32,7 +36,9 @@ def get_screenshot(urlraw, icao, fname='screenshot.png'):
     #elif not elems[0].is_displayed():
     #  raise Exception(f"have {len(elems)}, but the first isn't displayed")
 
-    time.sleep(3)
+    #browser.execute_script(f"document.body.style.zoom='{zoom}%'")
+
+    time.sleep(5)
     br = browser.save_screenshot(fname)
     # print(f"done {br}")
 
