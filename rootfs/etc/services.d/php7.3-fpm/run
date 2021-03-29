@@ -19,6 +19,10 @@ echo "[$APPNAME][$(date)] php7.3-fpm started as an s6 service"
 #
 mkdir -p /run/php
 #
+# Now make sure that $BASEURL is written into the PHP file. Note - since PHP runs as non-root,
+# we can't rely on the OS making it available.
+sed -i 's|\(^\s*$baseurl=\).*|\1'"\"$BASEURL\""'|' /var/www/html/index.php
+#
 # We are running php7.3-fpm in the foreground. If, for any reason, it fails, we wait 10 seconds
 # to make sure we're not spamming the processor with restarts, and then we run it again.
 #

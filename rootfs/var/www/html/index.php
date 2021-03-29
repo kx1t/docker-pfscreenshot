@@ -1,14 +1,14 @@
 <?php
 
-    if(isset($_GET['icao'])) {
+    $baseurl=" "
+    if (isset($_GET['icao'])) {
         $icao = $_GET['icao'];
     } else {
         die("#Must use <URL>/?icao=xxxxxx otherwise it won't work!");
+    }
 
-    if(isset(getenv("BASEURL")) {
-        baseurl=getenv("BASEURL");
-    } else {
-        die("#php error: BASEURL not set in container environment");
+    if ($baseurl == "") {
+        die("#php error: BASEURL not set in container environment: --" . $baseurl . "--");
     }
 
 	system("/opt/app/snap.py " . $baseurl . " " . escapeshellarg($icao), $return_value );
