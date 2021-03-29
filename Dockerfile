@@ -25,7 +25,8 @@ RUN set -x && \
     # ca-certificates kept for python
     TEMP_PACKAGES+=(gnupg2) && \
     TEMP_PACKAGES+=(file) && \
-    KEPT_PACKAGES+=(curl) && `# curl kept for ca-certificates use` \
+    # curl kept for ca-certificates use
+    KEPT_PACKAGES+=(curl) && \
     KEPT_PACKAGES+=(ca-certificates) && \
     # a few KEPT_PACKAGES for debugging - they can be removed in the future
     KEPT_PACKAGES+=(procps nano) && \
